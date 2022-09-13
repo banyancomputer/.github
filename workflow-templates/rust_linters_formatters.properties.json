@@ -1,0 +1,10 @@
+{
+  "name": "Rustfmt and clippy",
+  "description": "runs rustfmt and clippy on the code",
+  "categories": [
+    "Rust"
+  ],
+  "filePatterns": [
+    "Cargo.toml"
+  ]
+}
