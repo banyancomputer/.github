@@ -7,6 +7,11 @@ on:
         description: 'Name of stuff to test in target. this is going to be used to find the stuff to generate coverage report against. like libbanyan_shared, or ipfs_proof_buddy.'
         required: true
         type: string
+      needs_test:
+        description: 'do we need to run the tests first?'
+        required: false
+        default: 'false'
+        type: string
 
 env:
   CARGO_TERM_COLOR: always
@@ -35,6 +40,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get -y install libcurl4-openssl-dev libelf-dev libdw-dev cmake gcc binutils-dev libiberty-dev
+      - run: cargo test
+        if: ${{ inputs.needs_test == 'true' }}
+        continue-on-error: true
       - run: cargo build
       - name: Generate coverage report
         run: |
