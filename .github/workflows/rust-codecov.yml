@@ -56,6 +56,11 @@ jobs:
           make install DESTDIR=../../kcov-build &&
           cd ../.. &&
           rm -rf kcov-master &&
-          for file in target/debug/${{ inputs.name_of_stuff_to_test_in_target }}*; do [ -x "${file}" ] || continue; mkdir -p "target/cov/$(basename $file)"; ./kcov-build/usr/local/bin/kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov/$(basename $file)" "$file"; done &&
+          # check that there exist some files to iterate over, abort with fail if not
+          ls -1 target/debug/deps/${{ inputs.name_of_stuff_to_test_in_target }}* | wc -l | grep -q -v 0 || exit 1
+          for file in target/debug/${{ inputs.name_of_stuff_to_test_in_target }}*; 
+            do [ -x "${file}" ] || continue; mkdir -p "target/cov/$(basename $file)"; 
+            ./kcov-build/usr/local/bin/kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov/$(basename $file)" "$file"; 
+          done &&
           bash <(curl -s https://codecov.io/bash) &&
           echo "Uploaded code coverage"
